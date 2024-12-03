@@ -9,6 +9,8 @@ import java.util.Scanner;
 
 public class FleetManagementApp {
 
+    private static final String FLEET_DATA_FILE = "FleetData.db"; // constant for serializable data file
+
     /**
      * Runs the Fleet Management System application, providing a menu-driven
      * interface for the user to interact with the fleet data.
@@ -62,7 +64,7 @@ public class FleetManagementApp {
         if (args.length > 0) {
             fleetManager = loadFleetFromCSV(args[0]);
         } else {
-            File dbFile = new File("FleetData.db");
+            File dbFile = new File(FLEET_DATA_FILE);
             if (dbFile.exists()) {
                 fleetManager = loadFleetFromSerializedFile();
             } else {
@@ -116,7 +118,7 @@ public class FleetManagementApp {
      * @return An instance of FleetManager populated with data from the serialized file.
      */
     private FleetManager loadFleetFromSerializedFile() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("FleetData.db"))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FLEET_DATA_FILE))) {
             return (FleetManager) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Error loading serialized fleet data: " + e.getMessage());
@@ -129,7 +131,7 @@ public class FleetManagementApp {
      * @param fleetManager The FleetManager instance containing the fleet data to save.
      */
     private void saveFleetToSerializedFile(FleetManager fleetManager) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("FleetData.db"))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FLEET_DATA_FILE))) {
             oos.writeObject(fleetManager);
         } catch (IOException e) {
             System.err.println("Error saving fleet data: " + e.getMessage());
